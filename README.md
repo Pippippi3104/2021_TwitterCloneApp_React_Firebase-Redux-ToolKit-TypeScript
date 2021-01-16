@@ -1,1 +1,1 @@
-# 2021_TwitterCloneApp_React_Firebase-Redux-ToolKit-TypeScript
+# 2021_Twitter の クローンアプリを作成しながらReactとFirebase連携、Redux ToolKit、TypeScriptについて学びます。
