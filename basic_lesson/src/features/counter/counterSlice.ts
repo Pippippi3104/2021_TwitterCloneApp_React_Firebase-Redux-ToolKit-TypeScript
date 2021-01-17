@@ -12,6 +12,8 @@ const initialState: CounterState = {
 export const counterSlice = createSlice({
   name: 'counter',
   initialState,
+
+  /* reducer : action & state を受け取る */
   reducers: {
     increment: state => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -30,6 +32,7 @@ export const counterSlice = createSlice({
   },
 });
 
+/* dispatch により action を実行するために export する */
 export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
