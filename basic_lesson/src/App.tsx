@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
+import CleanUp from './CleanUp';
 
 /* allow function の型で記述 */
 const App: React.FC = () => {
   const [status, setStatus] = useState<string | number>("text");
   const [input, setInput] = useState("");
   const [counter, setCounter] = useState(0);
+  const [display, setDisplay] = useState(true);
 
 /* 関数定義 (eの型を忘れず定義) */
 const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,6 +38,10 @@ useEffect(() => {
         {/* counterのstate */}
         <h4>{counter}</h4>
         <button onClick={() => setCounter((preCounter) => preCounter+1)}>Increment</button>
+
+        {/* useEffectの練習 */}
+        {display && <CleanUp />}
+        <button onClick={() => setDisplay(!display)}>Toggle display</button>
 
         {/* defaultで作られるやつ */}
         <img src={logo} className="App-logo" alt="logo" />
