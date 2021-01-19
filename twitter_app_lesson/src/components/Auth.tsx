@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import "./Auth.module.css";
+import styles from "./Auth.module.css";
 
 /* redux */
 import { useDispatch } from "react-redux";
@@ -100,6 +101,7 @@ const Auth : React.FC = () => {
         await storage.ref(`avatars/${fileName}`).put(avatarImage);
         url = await storage.ref("avatars").child(fileName).getDownloadURL();
       }
+      /* stateに追加 */
       await authUser.user?.updateProfile({
         displayName: username,
         photoURL: url,
@@ -128,6 +130,47 @@ const Auth : React.FC = () => {
             {isLogin ? "Login" : "Register"}
           </Typography>
           <form className={classes.form} noValidate>
+
+          {!isLogin && (
+              <>
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="username"
+                  label="Username"
+                  id="username"
+                  autoComplete="username"
+                  autoFocus
+                  /* usename */
+                  value={username}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setUsername(e.target.value);
+                  }}
+                />
+                <Box textAlign="center">
+                  <IconButton>
+                    <label>
+                      <AccountCircleIcon
+                        fontSize="large"
+                        className={
+                          avatarImage
+                            ? styles.login_addIconLoaded
+                            : styles.login_addIcon
+                        } 
+                      />
+                      <input 
+                        className={styles.login_hiddenIcon}
+                        type="file"
+                        onChange={onChangeImageHandler}
+                      />
+                    </label>
+                  </IconButton>
+                </Box>
+              </>
+            )}    
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -144,6 +187,7 @@ const Auth : React.FC = () => {
                   setEmail(e.target.value);
               }}
             />
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -159,9 +203,15 @@ const Auth : React.FC = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setPassword(e.target.value);
               }}
-            />
+            />         
 
             <Button
+              disabled={
+                /* 入力エラー対応 */
+                isLogin
+                  ? !email || password.length < 6
+                  : !username || !email || password.length < 6 || !avatarImage
+              }
               fullWidth
               variant="contained"
               color="primary"
