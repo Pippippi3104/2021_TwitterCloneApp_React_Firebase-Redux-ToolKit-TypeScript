@@ -31,6 +31,18 @@ import EmailIcon from "@material-ui/icons/Email";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
+/* modal周り */
+function getModelStyle(){
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
 /* template利用（material-uiのテンプレ） */
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +73,15 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  modal: {
+    outline: "none",
+    position: "absolute",
+    width: 400,
+    borderRadius: 10,
+    backgroundColor: "white",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(10),
+  },
 }));
 
 const Auth : React.FC = () => {
@@ -75,9 +96,27 @@ const Auth : React.FC = () => {
   const [username, setUsername] = useState("");
   const [avatarImage, setAvatarImage] = useState<File | null>(null);
   const [isLogin, setIsLogin] = useState(true);
+  const [openModel, setOpenModel] = React.useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+
+  /* 関数など */
+  const sendResetEmail = async (e: React.MouseEvent<HTMLElement>) => {
+    await auth
+      .sendPasswordResetEmail(resetEmail)
+      .then(() => {
+        setOpenModel(false);
+        setResetEmail("");
+      })
+      .catch((err) => {
+        alert(err.message);
+        setResetEmail("");
+      });
+  };
   const onChangeImageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    /* filesの最初の要素だけ存在を確認する */
     if (e.target.files![0]) {
       setAvatarImage(e.target.files![0]);
+      /* 初期化 */
       e.target.value = "";
     }
   };
@@ -131,7 +170,7 @@ const Auth : React.FC = () => {
           </Typography>
           <form className={classes.form} noValidate>
 
-          {!isLogin && (
+            {!isLogin && (
               <>
                 <TextField
                   variant="outlined"
@@ -149,6 +188,8 @@ const Auth : React.FC = () => {
                       setUsername(e.target.value);
                   }}
                 />
+
+                {/* ユーザーアイコン */}
                 <Box textAlign="center">
                   <IconButton>
                     <label>
@@ -240,7 +281,12 @@ const Auth : React.FC = () => {
 
             <Grid container>
               <Grid item xs>
-                  <span className="login_reset">Forgot password?</span>
+                  <span 
+                    className="login_reset"
+                    onClick={() => setOpenModel(true)}
+                  >
+                    Forgot password?
+                  </span>
               </Grid>
               <Grid item>
                   <span 
@@ -256,6 +302,7 @@ const Auth : React.FC = () => {
                 fullWidth
                 variant="contained"
                 color="primary"
+                startIcon={<CameraIcon />}
                 className={classes.submit}
                 onClick={signInGoogle}
             >
@@ -263,6 +310,30 @@ const Auth : React.FC = () => {
             </Button>
 
           </form>
+
+          {/* password reset */}
+          <Modal open={openModel} onClose={() => setOpenModel(false)}>
+              <div style={getModelStyle()} className={classes.modal}>
+                <div className={styles.login_model}>
+                  <TextField
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    type="email"
+                    name="email"
+                    label="Reset E-mail"
+                    value={resetEmail}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setResetEmail(e.target.value);
+                    }} 
+                  />
+                  <IconButton onClick={sendResetEmail}>
+                    <SendIcon />
+                  </IconButton>
+                </div>
+              </div>
+          </Modal>
+
         </div>
       </Grid>
     </Grid>
