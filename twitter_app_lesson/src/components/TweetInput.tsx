@@ -11,7 +11,7 @@ import { selectUser } from "../features/userSlice";
 import { auth, storage, db } from "../firebase";
 import firebase from "firebase/app";
 
-const TweetInput = () => {
+const TweetInput: React.FC = () => {
     /* state */
     const user = useSelector(selectUser);
     const [tweetImage, setTweetImage] = useState<File | null>(null);
