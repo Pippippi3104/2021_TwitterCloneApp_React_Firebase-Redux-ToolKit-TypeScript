@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from "./TweetInput.module.css";
 import { Avatar, Button, IconButton } from "@material-ui/core";
-import AddAPhoto from "@material-ui/icons/AddAPhoto";
+import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 
 /* redux */
 import { useSelector } from "react-redux";
@@ -74,15 +74,50 @@ const TweetInput = () => {
     };
 
     return (
-        <div>
-            <Avatar
-              className={styles.tweet_avatar}
-              src={user.photoUrl}
-              onClick={async () => {
-                  await auth.signOut();
-              }} 
-            />
-        </div>
+        <>
+            <form onSubmit={sendTweet}>
+                <div className={styles.tweet_form}>
+                    <Avatar
+                    className={styles.tweet_avatar}
+                    src={user.photoUrl}
+                    onClick={async () => {
+                        await auth.signOut();
+                    }} 
+                    />
+                    <input
+                        className={styles.tweet_input}
+                        placeholder="what`s happning ?"
+                        type="text"
+                        autoFocus
+                        value={tweetMsg}
+                        onChange={(e) => setTweetMsg(e.target.value)} 
+                    />
+                    <IconButton>
+                        <label>
+                            <AddAPhotoIcon 
+                                className={
+                                    tweetImage ? styles.tweet_addIconLoaded : styles.tweet_addicon
+                                }
+                            />
+                            <input
+                                className={styles.tweet_hiddenIcon}
+                                type="file"
+                                onChange={onChangeImageHandler} 
+                             />
+                        </label>
+                    </IconButton>
+                </div>
+                <Button
+                    type="submit"
+                    disabled={!tweetMsg}
+                    className={
+                        tweetMsg ? styles.tweet_sendBtn : styles.tweet_sendDisableBtn
+                    }
+                >
+                    Tweet
+                </Button>
+            </form>
+        </>
     );
 };
 
