@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import './App.module.css';
-
+import React, { useEffect } from "react";
+import "./App.module.css";
+aaa;
 /* redux */
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser, login, logout } from "./features/userSlice";
 
 /* firebase */
 import { auth } from "./firebase";
-import Feed from './components/Feed';
-import Auth from './components/Auth';
+import Feed from "./components/Feed";
+import Auth from "./components/Auth";
 
 /* FC = functional component */
-const App : React.FC = () => {
+const App: React.FC = () => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
@@ -48,6 +48,6 @@ const App : React.FC = () => {
       )}
     </>
   );
-}
+};
 
 export default App;
